@@ -16,28 +16,25 @@ const event = {
 };
 let ids = [];
 let startGet = false;
-let elApp;
-let elParent;
-let elRootParent;
-let elRoot;
+let parentList = [];
 // js 随机得到一个8位数的id
 const getId = () => Math.random().toString(36).slice(-8);
 export const Text = function (str) {
   const node = document.createElement("span");
   const nodeId = getId();
   node.id = nodeId;
-  // debugger
 
-  // console.log('create', nodeId)
+  parentList[parentList.length - 1].appendChild(node);
 
-  // debugger
-  // elParent = node;
-  // elParent = node;
   if (typeof str === "function") {
     // 开始收集依赖
     ids = [];
     startGet = true;
-    node.innerHTML = str() ?? "";
+    parentList.push(node)
+    const html = str();
+    if (html !== undefined) {
+      node.innerHTML = html;
+    }
     startGet = false;
     // 结束收集依赖
     ids.forEach((id) => {
@@ -45,16 +42,10 @@ export const Text = function (str) {
         node.innerHTML = str();
       });
     });
+    parentList.pop()
   } else {
     node.innerHTML = str ?? "";
   }
-
-  // console.log(elParent, "append", nodeId);
-  elParent.appendChild(node);
-  // debugger
-  // elParent = node.parentNode;
-
-  // console.log(elParent);
 
   return {
     onClick: (fn) => {
@@ -69,12 +60,10 @@ export const Text = function (str) {
   };
 };
 export const Build = function (selector, fn) {
-  elRootParent = document.querySelector(selector);
-  elRoot = document.createDocumentFragment();
-  elParent = elRoot;
+  const app = document.querySelector(selector);
 
   // 添加事件监听器到父元素
-  elRootParent.addEventListener("click", function (event) {
+  app.addEventListener("click", function (event) {
     // 检查点击的是 li 元素
     if (eventMap[event.target.id]) {
       eventMap[event.target.id].forEach((fn) => {
@@ -83,9 +72,11 @@ export const Build = function (selector, fn) {
     }
   });
 
-  fn.call(elRootParent);
+  parentList = [app];
 
-  elRootParent.appendChild(elRoot);
+  fn.call(app);
+
+  // app.appendChild(elRoot);
 };
 const createReactive = (obj) =>
   new Proxy(obj, {

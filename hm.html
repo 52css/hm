@@ -11,7 +11,7 @@
     <h3>绑定对象</h3>
     <div id="app2"></div>
     <script type="module">
-      import { Build, ref, Text } from './script.js'
+      import { Build, ref, Text } from "./script.js";
 
       Build("#app", () => {
         const val = ref("abc");
@@ -42,7 +42,12 @@
         //   // });
 
         // });
+
         Text("==静态文字==");
+
+        Text(() => {
+          Text("==静态文字==");
+        });
       });
 
       // Build("#app2", () => {
