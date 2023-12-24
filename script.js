@@ -15,45 +15,60 @@ const event = {
   },
 };
 let ids = [];
-let startGet = false;
+let isMounted = false;
 let parentList = [];
 // js 随机得到一个8位数的id
 const getId = () => Math.random().toString(36).slice(-8);
-const createComponent = (type, str) => {
+const setVal = (str, fn, node) => {
+  if (typeof str === "function") {
+    // 开始收集依赖
+    ids = [];
+    node && parentList.push(node);
+    const html = str();
+    if (html !== undefined) {
+      fn(html);
+      // 结束收集依赖
+      ids.forEach((id) => {
+        event.$on(id, () => {
+          fn(str());
+        });
+      });
+    }
+    node && parentList.pop();
+  } else {
+    fn(str ?? "");
+    // node.innerHTML = str ?? "";
+  }
+};
+const createComponent = (type, html) => {
   const node = document.createElement(type);
   const nodeId = getId();
   node.id = nodeId;
 
   parentList[parentList.length - 1].appendChild(node);
 
-  if (typeof str === "function") {
-    // 开始收集依赖
-    ids = [];
-    parentList.push(node)
-    startGet = true;
-    const html = str();
-    startGet = false;
-    if (html !== undefined) {
+  setVal(
+    html,
+    (html) => {
       node.innerHTML = html;
-    }
-    // 结束收集依赖
-    ids.forEach((id) => {
-      event.$on(id, () => {
-        node.innerHTML = str();
-      });
-    });
-    parentList.pop()
-  } else {
-    node.innerHTML = str ?? "";
-  }
+    },
+    node
+  );
 
   return {
     fontSize(size) {
-      node.setAttribute('fz', size);
+      setVal(size, (size) => {
+        node.style.fontSize = `${size}px`;
+      });
+
       return this;
     },
     color(color) {
-      node.setAttribute('c', color);
+      // node.style.color = color;
+      setVal(color, (color) => {
+        node.style.color = color;
+      });
+
       return this;
     },
     onClick(fn) {
@@ -67,10 +82,10 @@ const createComponent = (type, str) => {
       return this;
     },
   };
-}
-export const Text =  (str) => createComponent('span', str);
-export const View =  (str) => createComponent('div', str);
-export const Button =  (str) => createComponent('button', str);
+};
+export const Text = (str) => createComponent("span", str);
+export const View = (str) => createComponent("div", str);
+export const Button = (str) => createComponent("button", str);
 export const Build = function (selector, fn) {
   const app = document.querySelector(selector);
 
@@ -85,9 +100,9 @@ export const Build = function (selector, fn) {
   });
 
   parentList = [app];
-
+  isMounted = false;
   fn.call(app);
-
+  isMounted = true;
   // app.appendChild(elRoot);
 };
 const createReactive = (obj) =>
@@ -95,7 +110,7 @@ const createReactive = (obj) =>
     get: function (target, key) {
       // debugger
       // console.log('get')
-      if (startGet) {
+      if (!isMounted) {
         this.id = getId();
         ids.push(this.id);
       }

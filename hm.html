@@ -4,14 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <style>
-      [fz="20"] {
-        font-size: 20px;
-      }
-      [c="red"] {
-        color: red;
-      }
-    </style>
+    <style></style>
   </head>
   <body>
     <h3>绑定原始类型</h3>
@@ -20,6 +13,7 @@
       import { Build, ref, Text, View, Button } from "./script.js";
 
       const H1 = (str) => View(str).fontSize(20).color('red');
+      // const Column = (str) => View(str).f
 
       Build("#app", () => {
         const val = ref("abc");
@@ -48,7 +42,7 @@
           val3.value = !val3.value;
         });
 
-        Text("==静态文字==");
+        Text("==静态文字==").color(() => val3.value ? 'red' : 'blue');
 
         Text(() => {
           Text("==嵌套静态文字==");
