@@ -4,14 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <style>
+      [fz="20"] {
+        font-size: 20px;
+      }
+      [c="red"] {
+        color: red;
+      }
+    </style>
   </head>
   <body>
     <h3>绑定原始类型</h3>
     <div id="app"></div>
-    <h3>绑定对象</h3>
-    <div id="app2"></div>
     <script type="module">
-      import { Build, ref, Text } from "./script.js";
+      import { Build, ref, Text, View, Button } from "./script.js";
+
+      const H1 = (str) => View(str).fontSize(20).color('red');
 
       Build("#app", () => {
         const val = ref("abc");
@@ -23,31 +31,33 @@
           }
         });
 
-        // const val2 = ref({
-        //   obj: 123,
-        // });
+        const val2 = ref({
+          obj: 123,
+        });
 
-        // Text(() => val2.value.obj).onClick(() => {
-        //   if (val2.value.obj === 123) {
-        //     val2.value.obj = 456;
-        //   } else {
-        //     val2.value.obj = 123;
-        //   }
-        // });
+        Text(() => val2.value.obj).onClick(() => {
+          if (val2.value.obj === 123) {
+            val2.value.obj = 456;
+          } else {
+            val2.value.obj = 123;
+          }
+        });
 
-        // Text(() => {
-        //   // const val = ref(true);
-        //   // Text(() => val.value).onClick(() => {
-        //   //   val.value = val.value ? false : true;
-        //   // });
-
-        // });
+        const val3 = ref(true);
+        Text(() => val3.value).onClick(() => {
+          val3.value = !val3.value;
+        });
 
         Text("==静态文字==");
 
         Text(() => {
-          Text("==静态文字==");
+          Text("==嵌套静态文字==");
         });
+
+        View(() => {
+          Button("来个按钮");
+          H1('来个h1压压惊')
+        })
       });
 
       // Build("#app2", () => {

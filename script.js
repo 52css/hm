@@ -19,8 +19,8 @@ let startGet = false;
 let parentList = [];
 // js 随机得到一个8位数的id
 const getId = () => Math.random().toString(36).slice(-8);
-export const Text = function (str) {
-  const node = document.createElement("span");
+const createComponent = (type, str) => {
+  const node = document.createElement(type);
   const nodeId = getId();
   node.id = nodeId;
 
@@ -29,13 +29,13 @@ export const Text = function (str) {
   if (typeof str === "function") {
     // 开始收集依赖
     ids = [];
-    startGet = true;
     parentList.push(node)
+    startGet = true;
     const html = str();
+    startGet = false;
     if (html !== undefined) {
       node.innerHTML = html;
     }
-    startGet = false;
     // 结束收集依赖
     ids.forEach((id) => {
       event.$on(id, () => {
@@ -48,7 +48,15 @@ export const Text = function (str) {
   }
 
   return {
-    onClick: (fn) => {
+    fontSize(size) {
+      node.setAttribute('fz', size);
+      return this;
+    },
+    color(color) {
+      node.setAttribute('c', color);
+      return this;
+    },
+    onClick(fn) {
       if (!eventMap[nodeId]) {
         eventMap[nodeId] = [];
       }
@@ -56,9 +64,13 @@ export const Text = function (str) {
         return;
       }
       eventMap[nodeId].push(fn);
+      return this;
     },
   };
-};
+}
+export const Text =  (str) => createComponent('span', str);
+export const View =  (str) => createComponent('div', str);
+export const Button =  (str) => createComponent('button', str);
 export const Build = function (selector, fn) {
   const app = document.querySelector(selector);
 
