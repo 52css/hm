@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style></style>
+    <link rel="stylesheet" href="./hm.css">
+  </head>
+  <body>
+    <h3>绑定原始类型</h3>
+    <div id="app"></div>
+    <h3>绑定对象</h3>
+    <div id="app2"></div>
+    <h3>判断</h3>
+    <div id="app3"></div>
+    <h3>循环</h3>
+    <div id="app4"></div>
+    <h3>布局2个text</h3>
+    <div id="app5"></div>
+    <h3>text嵌套text</h3>
+    <div id="app6"></div>
+    <h3>column组件</h3>
+    <div id="app7"></div>
+    <h3>row组件</h3>
+    <div id="app8"></div>
+    <script type="module">
+      import { Build, ref, Text, View, Button, H1 } from "./hm.js";
+
+      Build("#app", () => {
+        const val = ref("abc");
+        Text(() => val.value).onClick(() => {
+          if (val.value === "abc") {
+            val.value = "efg";
+          } else {
+            val.value = "abc";
+          }
+        });
+      });
+
+      Build("#app2", () => {
+        const val = ref({
+          obj: 123,
+        });
+        Text(() => val.value.obj).onClick(() => {
+          if (val.value.obj === 123) {
+            val.value.obj = 456;
+          } else {
+            val.value.obj = 123;
+          }
+        });
+      });
+
+      Build("#app3", () => {
+        const isOpen = ref(false);
+        Text(() => (isOpen.value ? "open" : "close")).onClick(() => {
+          isOpen.value = !isOpen.value;
+        });
+      });
+
+      Build("#app4", () => {
+        [1, 2, 3, 4].forEach((x) => {
+          Text(x);
+        });
+      });
+
+      Build("#app5", () => {
+        Text("abc");
+        Text("efg");
+      });
+
+      Build("#app6", () => {
+        const val = ref("abc");
+        Text(() => {
+          const isOpen = ref(false);
+          Text(() => (isOpen.value ? "open" : "close")).onClick(() => {
+            isOpen.value = !isOpen.value;
+          });
+        });
+
+        Text(() => val.value).onClick(() => {
+          if (val.value === "abc") {
+            val.value = "efg";
+          } else {
+            val.value = "abc";
+          }
+        });
+      });
+
+      Build("#app7", () => {
+        View(() => {
+          View('111');
+          View('222');
+          View('333');
+        }).flex().flexCol().gap(1)
+      });
+
+      Build("#app8", () => {
+        View(() => {
+          View('111');
+          View('222');
+          View('333');
+        }).flex().gap(1)
+      });
+    </script>
+  </body>
+</html>

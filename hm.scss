@@ -1,0 +1,229 @@
+// 常见通用配置
+.flex {
+  display: flex;
+}
+.flex-wrap {
+  flex-wrap: wrap;
+}
+.flex-1 {
+  flex: 1;
+}
+.flex-col {
+  flex-direction: column;
+}
+.font-400 {
+  font-weight: 400;
+}
+.font-600 {
+  font-weight: 600;
+}
+.items-center {
+  align-items: center;
+}
+.items-start {
+  align-items: flex-start;
+}
+.items-end {
+  align-items: flex-end;
+}
+.justify-center {
+  justify-content: center;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.justify-around {
+  justify-content: space-around;
+}
+.justify-evenly {
+  justify-content: space-evenly;
+}
+.b-solid {
+  border-style: solid;
+}
+.b-dashed {
+  border-style: dashed;
+}
+.h-full {
+  height: 100%;
+}
+.w-full {
+  width: 100%;
+}
+.min-w-0 {
+  min-width: 0;
+}
+.relative {
+  position: relative;
+}
+.absolute {
+  position: absolute;
+}
+.fixed {
+  position: fixed;
+}
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.line-clamp-2	{
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+.text-left {
+  text-align: left;
+}
+.text-center {
+  text-align: center;
+}
+.text-right {
+  text-align: right;
+}
+.m-a {
+  margin: auto;
+}
+.ml-a {
+  margin-left: auto;
+}
+.mr-a {
+  margin-right: auto;
+}
+.mt-a {
+  margin-top: auto;
+}
+.mb-a {
+  margin-bottom: auto;
+}
+
+.absolute-auto {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  z-index: 99999;
+}
+
+// 投影
+.box-shadow1 {
+  box-shadow: 0px 8px 10px -5px rgba(0, 0, 0, 0.08), 0px 16px 24px 2px rgba(0, 0, 0, 0.04), 0px 6px 30px 5px rgba(0, 0, 0, 0.05);
+}
+.box-shadow2 {
+  box-shadow: 0px 4px 10px 0px rgba(0, 0, 0, 0.02);
+}
+
+
+// 16rem 相关的配置
+$sizePlusState: (
+  gap: gap,
+  text: font-size,
+  min-w: min-width,
+  max-w: max-width,
+  min-h: min-height,
+  max-h: max-height,
+  m: margin,
+  mt: margin-top,
+  mb: margin-bottom,
+  mr: margin-right,
+  ml: margin-left,
+  p: padding,
+  pt: padding-top,
+  pb: padding-bottom,
+  pr: padding-right,
+  pl: padding-left,
+  h: height,
+  w: width,
+  b-: border-width,
+  b-t: border-top-width,
+  b-b: border-bottom-width,
+  b-r: border-right-width,
+  b-l: border-left-width,
+  top: top,
+  bottom: bottom,
+  right: right,
+  left: left,
+  rd: border-radius,
+  rd-tl: border-top-left-radius,
+  rd-tr: border-top-right-radius,
+  rd-br: border-bottom-right-radius,
+  rd-bl: border-bottom-left-radius,
+);
+$sizeNegativeState: (
+  m-: margin,
+  mt-: margin-top,
+  mb-: margin-bottom,
+  mr-: margin-right,
+  ml-: margin-left,
+  p-: padding,
+  pt-: padding-top,
+  pb-: padding-bottom,
+  pr-: padding-right,
+  pl-: padding-left,
+);
+
+@for $i from 0 to 20 {
+  @each $selector, $attr in $sizePlusState {
+    .#{$selector}-#{$i} {
+      #{$attr}: 4 * $i + px;
+    }
+  }
+  @each $selector, $attr in $sizeNegativeState {
+    .#{$selector}-#{$i} {
+      #{$attr}: -4 * $i + px;
+    }
+  }
+  .z-#{$i} {
+    z-index: 2 * $i;
+  }
+  .z--#{$i} {
+    z-index: -2 * $i;
+  }
+}
+
+// 边距配置
+@for $i from 0 to 750 {
+  @each $selector, $attr in $sizePlusState {
+    .#{$selector}-#{$i}px {
+      #{$attr}: 1 * $i + px;
+    }
+  }
+  @each $selector, $attr in $sizeNegativeState {
+    .#{$selector}-#{$i}px {
+      #{$attr}: -1 * $i + px;
+    }
+  }
+}
+
+// 颜色
+$colorState: (
+  primary: #0052D9,
+  primary-disabled: rgba(0, 82, 217, 0.50),
+  success: #67C23A,
+  warning: #E37318,
+  info: #909399,
+  danger: #D54941,
+  secondary: #666,
+  placeholder: #999,
+  dark: #F3F3F3,
+  lighter: #E7E7E7,
+  black: #000,
+  white: #fff,
+  transparent: transparent,
+  price: #FF4F19,
+);
+
+@each $type, $colorVal in $colorState {
+  .c-#{"" + $type} {
+    color: $colorVal;
+  }
+  .bg-#{"" + $type} {
+    background-color: $colorVal;
+  }
+  .b-#{"" + $type} {
+    border-color: $colorVal;
+  }
+}
